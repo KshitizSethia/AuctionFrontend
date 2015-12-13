@@ -122,7 +122,7 @@ function createHumanPlayer() {
 	row.insertCell(0).innerHTML = playerName;
 
 	var textBoxForPlayer = document.createElement("input");
-	textBoxForPlayer.setAttribute("type", "text");
+	textBoxForPlayer.setAttribute("type", "password");
 	textBoxForPlayer.id = "bid_" + guid;
 	textBoxForPlayer.placeholder = "Enter bid amount";
 	textBoxForPlayer.disabled = true;

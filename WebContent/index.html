@@ -47,9 +47,15 @@
 			<table id="player_console">
 			</table>
 			<input id="initial_player_name" placeholder="New Player Name"
-				onkeydown="handlePlayerNameKeyPress(event)"></input>
-			<input type="button" value="Create" onclick="createHumanPlayer()"
+				onkeydown="handlePlayerNameKeyPress(event)"></input> <input
+				type="button" value="Create" onclick="createHumanPlayer()"
 				id="button_createHumanPlayer" />
+			<p>Controls:
+			<ul>
+				<li>"Enter" to add player and place bid.</li>
+				<li>"Ctrl + Enter" to start Auction</li>
+			</ul>
+			</p>
 		</fieldset>
 		<!--<tr> <input
 			type="button" value="Create Bot Player" onclick="createBotPlayer()"
