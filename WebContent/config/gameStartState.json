@@ -1,0 +1,1 @@
+{ "items":[ { "index":0, "type":"t1", }, { "index":1, "type":"t2" }, { "index":2, "type":"t3" } ], "itemTypeName":{ "t1":"Spock", "t2":"Avatar Book Collection", "t3":"Evoque Die Cast model", "t4":"Nutella Custom Jar" }, "itemFileName":{ "t1":"img/spock.png", "t2":"img/avatar.png", "t3":"img/range_rover.png", "t4":"img/your_nutella.png" }, "playerStatus":[ ] }

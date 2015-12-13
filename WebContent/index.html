@@ -2,20 +2,21 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="web.css">
-<script type="text/javascript" src="client.js"></script>
+<script type="text/javascript" src="scripts/main.js"></script>
+<!-- <script data-main="app" src="lib/require.js"></script> -->
 </head>
-<body onload="updateUI();">
+<body onload="onLoad();">
 	<h1>Auction Game</h1>
-	<div id="mainWindow">
+	<div id="mainWindow" style="visibility: hidden">
 		<div id="bids">
 			<h2>Bid Status</h2>
 			<table id="itemsTable" border=1px; width=90% align="center">
-				<tr>
+				<thead>
 					<td>Index</td>
 					<td>Item</td>
 					<td>Won By</td>
 					<td>Winning Amount</td>
-				</tr>
+				</thead>
 			</table>
 		</div>
 		<div id="current_bid">
@@ -33,8 +34,12 @@
 		<table id="player_console">
 		</table>
 		<input id="initial_player_name" placeholder="New Player Name"></input>
-		<input type="button" value="Create new Player"
-			onclick="createNewPlayer()" />
+		<article> <input type="button" value="Create Human Player"
+			onclick="createHumanPlayer()" id="button_createHumanPlayer" /> <input
+			type="button" value="Create Bot Player" onclick="createBotPlayer()"
+			disabled id="button_createBotPlayer" /></article>
+		<input type="button" value="Start Auctions" onclick="startAuction()"
+			id="button_startAuction" />
 	</div>
 </body>
 </html>
