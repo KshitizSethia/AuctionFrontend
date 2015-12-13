@@ -3,7 +3,7 @@
  */
 var gameStatus;
 var bidsForCurrentRound = {};
-var winningCount = 2;
+var winningScore;
 
 function getInitialStatus() {
 	return '{                     ' + '    "items": [{                 '
@@ -33,12 +33,19 @@ function getInitialStatus() {
 			+ '    },                          '
 			+ '    "playerStatus": []          ' + '}';
 }
+
 function onLoad() {
 	gameStatus = JSON.parse(getInitialStatus());
 	document.getElementById("button_createHumanPlayer").disabled = false;
 	document.getElementById("initial_player_name").disabled = false;
 	document.getElementById("player_console").innerHTML = "";
 	document.getElementById("mainWindow").style.visibility = "hidden";
+	document.getElementById("instructions").style.display = "block";
+	document.getElementById("winningScore").value = 2;
+	document.getElementById("winningScore").disabled = false;
+	document.getElementById("popup").style.display = "none";
+	document.getElementById("popup").innerHTML = "";
+	document.getElementById("initial_player_name").focus();
 	// document.getElementById("button_createBotPlayer").disabled = false;
 	document.getElementById("button_startAuction").disabled = true;
 	setupCleanTableRows();
@@ -87,7 +94,16 @@ function setupCleanTableRows() {
 }
 
 function generateGuid() {
-	return (Math.random() * 10000000000000).toString();
+	return (Math.random() * 10000000000000000).toString();
+}
+
+function handlePlayerNameKeyPress(event) {
+	if (event.keyCode == 13) {
+		createHumanPlayer();
+		if (event.ctrlKey) {
+			startAuction();
+		}
+	}
 }
 
 function createHumanPlayer() {
@@ -110,6 +126,11 @@ function createHumanPlayer() {
 	textBoxForPlayer.id = "bid_" + guid;
 	textBoxForPlayer.placeholder = "Enter bid amount";
 	textBoxForPlayer.disabled = true;
+	textBoxForPlayer.onkeypress = function() {
+		if (event.keyCode == 13) {
+			registerBid(guid);
+		}
+	}
 	row.insertCell(1).appendChild(textBoxForPlayer);
 
 	var buttonForPlayer = document.createElement("input");
@@ -118,7 +139,7 @@ function createHumanPlayer() {
 	buttonForPlayer.value = "Bid";
 	buttonForPlayer.disabled = true;
 	buttonForPlayer.onclick = function() {
-		registerBid(guid)
+		registerBid(guid);
 	};
 	row.insertCell(2).appendChild(buttonForPlayer);
 
@@ -152,10 +173,13 @@ function createHumanPlayer() {
 }
 
 function startAuction() {
+	winningScore = parseInt(document.getElementById("winningScore").value);
+	document.getElementById("winningScore").disabled = true;
 	document.getElementById("button_createHumanPlayer").disabled = true;
 	// document.getElementById("button_createBotPlayer").disabled = true;
 	document.getElementById("button_startAuction").disabled = true;
 	document.getElementById("initial_player_name").disabled = true;
+	document.getElementById("instructions").style.display = "none";
 
 	var firstUnbidItem = updateItemListAndReturnFirstUnbidItem();
 	updateItemToBeBid(firstUnbidItem);
@@ -169,6 +193,8 @@ function enableBidButtons() {
 				.getElementById("button_" + gameStatus.playerStatus[index].guid).disabled = false;
 		document.getElementById("bid_" + gameStatus.playerStatus[index].guid).disabled = false;
 	}
+	document.getElementById("player_console").rows[0].cells[1].children[0]
+			.focus();
 }
 
 function registerBid(guid) {
@@ -198,13 +224,20 @@ function registerBid(guid) {
 	document.getElementById("button_" + player.guid).disabled = true;
 	document.getElementById("bid_" + player.guid).disabled = true;
 
+	for (var rowIndex = 0; rowIndex < document.getElementById("player_console").rows.length; rowIndex++) {
+		var inputBox = document.getElementById("player_console").rows[rowIndex].cells[1].children[0];
+		if (inputBox.disabled === false) {
+			inputBox.focus();
+			break;
+		}
+	}
+
 	if (Object.keys(bidsForCurrentRound).length === gameStatus.playerStatus.length) {
 		var roundWinner = getWinnerForThisRound();
-		showRoundWinningAnimation(roundWinner);
 
 		var currentBidItem = getItemBeingBidCurrently();
 		currentBidItem.winner = roundWinner.name;
-		currentBidItem.amount = bidsForCurrentRound[roundWinner.guid];
+		currentBidItem.winningAmount = bidsForCurrentRound[roundWinner.guid];
 
 		roundWinner.amountLeft -= bidsForCurrentRound[roundWinner.guid];
 		if (currentBidItem.type in roundWinner.itemsAcquired) {
@@ -217,25 +250,61 @@ function registerBid(guid) {
 		bidsForCurrentRound = {};
 
 		var gameWinner = getGameWinner();
-		var newItemToBeBid = getItemBeingBidCurrently();
+		var newItemToBeBid = updateItemListAndReturnFirstUnbidItem();
 		if (gameWinner != null) {
-			window.alert(gameWinner.name + " has won the game!!");
-			onLoad();
+			showGameEnd(gameWinner);
 		} else if (gameWinner == null && newItemToBeBid == null) {
-			window.alert("Game Over, Nobody won! :/");
-			onLoad();
+			showGameOver();
 		} else {
+			var message = roundWinner.name + " has won this round!";
+			showPopup(message, 1000);
 			updateItemToBeBid(newItemToBeBid);
 			enableBidButtons();
 		}
 	}
 }
 
+function showGameOver() {
+	showPopup("Game Over, Nobody won! :/", -1);
+	var reset = document.createElement("input");
+	reset.type = "button";
+	reset.value = "Reset";
+	reset.onclick = function() {
+		onLoad();
+	};
+	document.getElementById("popup").appendChild(reset);
+}
+
+function showGameEnd(gameWinner) {
+	showPopup(gameWinner.name + " has won the game!!", -1);
+	var saveScore = document.createElement("input");
+	saveScore.type = "button";
+	saveScore.value = "Save Score";
+	saveScore.onclick = function() {
+		saveScore(gameWinner.name, 10);
+	};
+	saveScore.align = "center";
+	document.getElementById("popup").appendChild(saveScore);
+
+	var reset = document.createElement("input");
+	reset.type = "button";
+	reset.value = "Reset";
+	reset.align = "center";
+	reset.onclick = function() {
+		onLoad();
+	};
+	document.getElementById("popup").appendChild(reset);
+}
+
+function saveScore(winnerName, score) {
+	window.alert("save score called with " + winnerName + score);
+}
+
 function getGameWinner() {
 	for ( var playerIndex in gameStatus.playerStatus) {
 		var player = gameStatus.playerStatus[playerIndex];
 		for ( var itemType in player.itemsAcquired) {
-			if (player.itemsAcquired[itemType] === winningCount) {
+			if (player.itemsAcquired[itemType] === winningScore) {
 				return player;
 			}
 		}
@@ -252,9 +321,16 @@ function getItemBeingBidCurrently() {
 	}
 }
 
-function showRoundWinningAnimation(winningPlayer) {
-	// put better animation
-	window.alert(winningPlayer.name + " has won this round!");
+function showPopup(message, timeout) {
+	var popup = document.getElementById("popup");
+	popup.style.display = "block";
+	popup.innerHTML = "<h3 align='center'>" + message + "</h3>";
+	if (timeout > 0) {
+		setTimeout(function() {
+			popup.style.display = "none";
+			popup.innerHTML = "";
+		}, timeout);
+	}
 }
 
 function getWinnerForThisRound() {

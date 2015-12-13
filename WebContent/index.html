@@ -7,6 +7,18 @@
 </head>
 <body onload="onLoad();">
 	<h1>Auction Game</h1>
+	<div id="popup"></div>
+	<div id="instructions">
+		<h2>Instructions for Auction</h2>
+		<ul>
+			<li>This is a closed auction.</li>
+			<li>A player wins if they have secure the requisite amount of
+				items of a type.</li>
+			<li>Number of items of a type required to win can be set.</li>
+			<li>Add players in the box to the right, set number of items to
+				win, hit "Start Auction".</li>
+		</ul>
+	</div>
 	<div id="mainWindow">
 		<div id="bids">
 			<h2>Bid Status</h2>
@@ -31,16 +43,26 @@
 	</div>
 	<div id="sidebar">
 		<h2>Player Console</h2>
-		<table id="player_console">
-		</table>
-		<input id="initial_player_name" placeholder="New Player Name"></input>
-		<article> <input type="button" value="Create Human Player"
-			onclick="createHumanPlayer()" id="button_createHumanPlayer"
-			onkeydown="if (event.keyCode == 13){createHumanPlayer();}" /> <!-- <input
+		<fieldset>
+			<table id="player_console">
+			</table>
+			<input id="initial_player_name" placeholder="New Player Name"
+				onkeydown="handlePlayerNameKeyPress(event)"></input>
+			<input type="button" value="Create" onclick="createHumanPlayer()"
+				id="button_createHumanPlayer" />
+		</fieldset>
+		<!--<tr> <input
 			type="button" value="Create Bot Player" onclick="createBotPlayer()"
-			disabled id="button_createBotPlayer" /> --></article>
-		<input type="button" value="Start Auctions" onclick="startAuction()"
-			id="button_startAuction" />
+			disabled id="button_createBotPlayer" /> </tr>-->
+		<fieldset>
+			Winning Score: <input id="winningScore" value="5" width="10"></input>
+			<input type="button" value="Start Auction" onclick="startAuction()"
+				id="button_startAuction" />
+		</fieldset>
+		<fieldset>
+			<input type="button" value="Reset" onclick="onLoad()"
+				id="button_reset" />
+		</fieldset>
 	</div>
 </body>
 </html>
