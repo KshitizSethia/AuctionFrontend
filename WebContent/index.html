@@ -7,7 +7,7 @@
 </head>
 <body onload="onLoad();">
 	<h1>Auction Game</h1>
-	<div id="mainWindow" style="visibility: hidden">
+	<div id="mainWindow">
 		<div id="bids">
 			<h2>Bid Status</h2>
 			<table id="itemsTable" border=1px; width=90% align="center">
@@ -35,9 +35,10 @@
 		</table>
 		<input id="initial_player_name" placeholder="New Player Name"></input>
 		<article> <input type="button" value="Create Human Player"
-			onclick="createHumanPlayer()" id="button_createHumanPlayer" /> <input
+			onclick="createHumanPlayer()" id="button_createHumanPlayer"
+			onkeydown="if (event.keyCode == 13){createHumanPlayer();}" /> <!-- <input
 			type="button" value="Create Bot Player" onclick="createBotPlayer()"
-			disabled id="button_createBotPlayer" /></article>
+			disabled id="button_createBotPlayer" /> --></article>
 		<input type="button" value="Start Auctions" onclick="startAuction()"
 			id="button_startAuction" />
 	</div>
