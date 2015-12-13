@@ -11,12 +11,22 @@
 	<div id="instructions">
 		<h2>Instructions for Auction</h2>
 		<ul>
-			<li>This is a closed auction.</li>
-			<li>A player wins if they have secure the requisite amount of
-				items of a type.</li>
-			<li>Number of items of a type required to win can be set.</li>
-			<li>Add players in the box to the right, set number of items to
-				win, hit "Start Auction".</li>
+			<li>This is a closed auction, you can't see the other player's
+				bids. You will only see the winning bid of previous rounds.</li>
+			<li>Winning:
+				<ul>
+					<li>ROUND: Bid the highest amount (float) for the painting. In
+						case of tie, first highest bidder wins.</li>
+					<li>GAME: Get 'n' copies of the same painting before anyone
+						else does. 'n' can be set in "Winning Score" on the right.</li>
+				</ul>
+			<li>Controls (on the right):
+				<ul>
+					<li>"Enter" to add player and place bid.</li>
+					<li>"Ctrl + Enter" to start Auction</li>
+				</ul>
+			</li>
+			<li>Add players, start auction! Godspeed!</li>
 		</ul>
 	</div>
 	<div id="mainWindow">
@@ -47,8 +57,8 @@
 			<table id="player_console">
 			</table>
 			<input id="initial_player_name" placeholder="New Player Name"
-				onkeydown="handlePlayerNameKeyPress(event)"></input> <input
-				type="button" value="Create" onclick="createHumanPlayer()"
+				onkeydown="handlePlayerNameKeyPress(event)" /> <input type="button"
+				value="Create" onclick="createHumanPlayer()"
 				id="button_createHumanPlayer" />
 			<p>Controls:
 			<ul>
@@ -61,7 +71,7 @@
 			type="button" value="Create Bot Player" onclick="createBotPlayer()"
 			disabled id="button_createBotPlayer" /> </tr>-->
 		<fieldset>
-			Winning Score: <input id="winningScore" value="5" width="10"></input>
+			Winning Score: <input id="winningScore" value="5" width="10" />
 			<input type="button" value="Start Auction" onclick="startAuction()"
 				id="button_startAuction" />
 		</fieldset>
